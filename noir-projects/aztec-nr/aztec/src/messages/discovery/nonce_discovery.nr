@@ -42,9 +42,20 @@ pub unconstrained fn attempt_note_nonce_discovery<Env>(
     // We need to find nonces (typically just one) that result in a note hash that, once siloed into a unique note hash,
     // is one of the note hashes created by the transaction.
     unique_note_hashes_in_tx.for_eachi(|i, expected_unique_note_hash| {
+        crate::oracle::debug_log::debug_log_format(
+            "EXPECTED_UNIQUE_NOTE_HASH: {}",
+            [expected_unique_note_hash],
+        );
+
         // Nonces are computed by hashing the first nullifier in the transaction with the index of the note in the
         // new note hashes array. We therefore know for each note in every transaction what its nonce is.
         let candidate_nonce = compute_note_hash_nonce(first_nullifier_in_tx, i);
+
+        crate::oracle::debug_log::debug_log_format(
+            "first_nullifier_in_tx: {}",
+            [first_nullifier_in_tx],
+        );
+        crate::oracle::debug_log::debug_log_format("candidate_nonce: {}", [candidate_nonce]);
 
         // Given nonce, note content and metadata, we can compute the note hash and silo it to check if it matches
         // the note hash at the array index we're currently processing.
@@ -60,6 +71,14 @@ pub unconstrained fn attempt_note_nonce_discovery<Env>(
 
         let siloed_note_hash = compute_siloed_note_hash(contract_address, hashes.note_hash);
         let unique_note_hash = compute_unique_note_hash(candidate_nonce, siloed_note_hash);
+
+        crate::oracle::debug_log::debug_log_format("inner_note_hash: {}", [hashes.note_hash]);
+        crate::oracle::debug_log::debug_log_format(
+            "contract_address: {}",
+            [contract_address.to_field()],
+        );
+        crate::oracle::debug_log::debug_log_format("siloed_note_hash: {}", [siloed_note_hash]);
+        crate::oracle::debug_log::debug_log_format("unique_note_hash: {}", [unique_note_hash]);
 
         if unique_note_hash == expected_unique_note_hash {
             // Note that while we did check that the note hash is the preimage of the expected unique note hash, we
