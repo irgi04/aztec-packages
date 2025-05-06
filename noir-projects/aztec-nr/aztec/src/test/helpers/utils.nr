@@ -40,7 +40,9 @@ impl<let N: u32, let M: u32> Deployer<N, M> {
             call_interface.get_args(),
             self.secret,
         );
+
         cheatcodes::advance_blocks_by(1);
+
         let inputs = cheatcodes::get_private_context_inputs(get_block_number() - 1);
         let mut private_context = PrivateContext::new(inputs, 0);
         let args = call_interface.get_args();
@@ -52,6 +54,8 @@ impl<let N: u32, let M: u32> Deployer<N, M> {
             args_hash,
             call_interface.get_is_static(),
         );
+
+        cheatcodes::advance_blocks_by(1);
 
         instance
     }

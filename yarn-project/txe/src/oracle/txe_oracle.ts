@@ -140,7 +140,7 @@ export class TXE implements TypedOracle {
 
   private simulationProvider = new WASMSimulator();
 
-  private noteCache: ExecutionNoteCache;
+  public noteCache: ExecutionNoteCache;
 
   private authwits: Map<string, AuthWitness> = new Map();
 
@@ -729,6 +729,10 @@ export class TXE implements TypedOracle {
     txEffect.noteHashes = [...uniqueNoteHashesFromPrivate, ...this.uniqueNoteHashesFromPublic];
 
     txEffect.nullifiers = [...this.siloedNullifiersFromPublic, ...this.noteCache.getAllNullifiers()];
+
+    console.log('NOTE HASHES', txEffect.noteHashes);
+    console.log('NULLIFIERS', txEffect.nullifiers);
+
     if (usedTxRequestHashForNonces) {
       txEffect.nullifiers.unshift(this.getTxRequestHash());
     }
