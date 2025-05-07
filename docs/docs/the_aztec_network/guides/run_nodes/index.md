@@ -1,4 +1,4 @@
----
+---bash -i <(curl -s https://install.aztec.network)
 id: index
 sidebar_position: 0
 title: Run a Node, Sequencer, or Prover
